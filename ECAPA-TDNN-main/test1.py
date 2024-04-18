@@ -44,8 +44,9 @@ for line in lines:
 
     # Extract the speaker and utterance paths
     speaker = parts[0]
+    print("speaker = "+speaker)
     utt_paths = parts[1:]
-
+    print("utt_paths = "+utt_paths)
     # Group the utterances for each speaker
     if speaker in utterances_by_speaker:
         utterances_by_speaker[speaker].append(utt_paths)
