@@ -32,7 +32,7 @@ ndx_dev_TC_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/ndx
 
 # Open the text file
 with open(trn_dev_addr, 'r') as file:
-    lines = file.readlines()[:2]  # Read only the first two lines
+    lines = file.readlines()[:3]  # Read only the first two lines
 
 # Initialize an empty dictionary to store utterances by speaker
 utterances_by_speaker = {}
@@ -46,7 +46,9 @@ for line in lines:
     speaker = parts[0]
     print("speaker = "+speaker)
     utt_paths = parts[1:]
-    print("utt_paths = "+utt_paths)
+    print("utt_paths0 = "+utt_paths[0])
+    print("utt_paths1 = "+utt_paths[1])
+    print("utt_paths2 = "+utt_paths[2])
     # Group the utterances for each speaker
     if speaker in utterances_by_speaker:
         utterances_by_speaker[speaker].append(utt_paths)
