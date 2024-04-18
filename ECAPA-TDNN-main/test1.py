@@ -1,5 +1,7 @@
 #In the name of GOD
-#Function Definition ---------
+#Import 
+import numpy as np
+#Function Definition
 def split_and_print(line):
     # Split the line into different parts/columns using spaces as the delimiter
     parts = line.split()
@@ -25,15 +27,55 @@ print("Hello Practical Speech word date :18-April-2024 = 30-farvardin-1403")
 # ndx address file: /mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess
 trn_dev_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess/dev.trn"
 ndx_dev_TC_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess/dev_TC.ndx" #Target Correct
+# Spkr = []
+# Utt = []
 
+# Open the text file
 with open(trn_dev_addr, 'r') as file:
-    line_count = 0
-    for line in file:
-        print(line)
-        split_and_print(line)
-        line_count += 1
-        if line_count == 2:
-            break
+    lines = file.readlines()[:2]  # Read only the first two lines
+
+# Initialize an empty dictionary to store utterances by speaker
+utterances_by_speaker = {}
+
+# Process each line
+for line in lines:
+    # Split the line into parts
+    parts = line.split()
+
+    # Extract the speaker and utterance paths
+    speaker = parts[0]
+    utt_paths = parts[1:]
+
+    # Group the utterances for each speaker
+    if speaker in utterances_by_speaker:
+        utterances_by_speaker[speaker].append(utt_paths)
+    else:
+        utterances_by_speaker[speaker] = [utt_paths]
+
+# Convert the dictionary of utterances to NumPy arrays
+for speaker in utterances_by_speaker:
+    utterances_by_speaker[speaker] = np.array(utterances_by_speaker[speaker])
+
+# Print the utterances by speaker
+for speaker, utterances in utterances_by_speaker.items():
+    print("Speaker:", speaker)
+    for i, utt_paths in enumerate(utterances):
+        print("Group", i+1, "utterances:", utt_paths)
+
+
+# Command + / (Mac)
+# with open(trn_dev_addr, 'r') as file:
+#     line_count = 0
+#     for line in file:
+#         print(line)
+#         split_and_print(line)
+#         parts = line.split()
+#             # Extract and print each part
+#         for part in parts:
+#             print(part)
+#         line_count += 1
+#         if line_count == 2:
+#             break
 
 
 with open(ndx_dev_TC_addr, 'r') as file:
