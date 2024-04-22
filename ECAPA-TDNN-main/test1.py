@@ -17,11 +17,19 @@ def split_and_print(line):
 #15-4-2024- Dooshanbe - 27-farvardin-1403
 #17-4-2024 - Chaharshanbe -29-farvardin-1403
 #18-4-2024 - Panjshanbe - 30-farvardin-1403
+#19-4-2024 -Jomee -31-farvardin-1403--ei hyva paljon
+#20-4-2024 - Shanbe-1-ordibehesht-1403--ei hyva paljon
+#21-4-2024 - Yekshanbe-2-Oridibehesht --ei hyva paljon
+#22-4-2024 - Yekshanbe-2-Oridibehesht --ei hyva paljon
 print("Hello Practical Speech word date :4-April-2024")
 print("Hello Practical Speech word date :10-April-2024")
 print("Hello Practical Speech word date :15-April-2024")
 print("Hello Practical Speech word date :17-April-2024")
 print("Hello Practical Speech word date :18-April-2024 = 30-farvardin-1403")
+print("Hello Practical Speech word date :19-April-2024 = 31-farvardin-1403")
+print("Hello Practical Speech word date :20-April-2024 = 1-ordibehesht-1403")
+print("Hello Practical Speech word date :21-April-2024 = 2-ordibehesht-1403")
+print("Hello Practical Speech word date :22-April-2024 = 3-ordibehesht-1403")
 #code address : /code1-29-3-2024/TD-SV-v1/ECAPA-TDNN-main
 # trn address file: /mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess
 # ndx address file: /mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess
@@ -49,6 +57,9 @@ for line in lines:
     print("utt_paths0 = "+utt_paths[0])
     print("utt_paths1 = "+utt_paths[1])
     print("utt_paths2 = "+utt_paths[2])
+
+
+
     # Group the utterances for each speaker
     if speaker in utterances_by_speaker:
         utterances_by_speaker[speaker].append(utt_paths)
