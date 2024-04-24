@@ -67,14 +67,13 @@ for line in lines:
     print("utt_paths1 = "+utt_paths[1])
     print("utt_paths2 = "+utt_paths[2])
 
-
-
-    # Group the utterances for each speaker
-    if speaker in utterances_by_speaker:
-        utterances_by_speaker[speaker].append(utt_paths)
-    else:
-        utterances_by_speaker[speaker] = [utt_paths]
-
+    # # Group the utterances for each speaker
+    # if speaker in utterances_by_speaker:
+    #     utterances_by_speaker[speaker].append(utt_paths)
+    # else:
+    #     utterances_by_speaker[speaker] = [utt_paths]
+        
+"""
 # Convert the dictionary of utterances to NumPy arrays
 for speaker in utterances_by_speaker:
     utterances_by_speaker[speaker] = np.array(utterances_by_speaker[speaker])
@@ -83,7 +82,7 @@ for speaker in utterances_by_speaker:
 for speaker, utterances in utterances_by_speaker.items():
     print("Speaker:", speaker)
     for i, utt_paths in enumerate(utterances):
-        print("Group", i+1, "utterances:", utt_paths)
+        print("Group", i+1, "utterances:", utt_paths)"""
 
 
 # Command + / (Mac)
