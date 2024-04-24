@@ -20,7 +20,15 @@ def split_and_print(line):
 #19-4-2024 -Jomee -31-farvardin-1403--ei hyva paljon
 #20-4-2024 - Shanbe-1-ordibehesht-1403--ei hyva paljon
 #21-4-2024 - Yekshanbe-2-Oridibehesht --ei hyva paljon
-#22-4-2024 - Yekshanbe-2-Oridibehesht --ei hyva paljon
+#22-4-2024 - Dooshanbe-3-Oridibehesht --ei hyva paljon
+#24-4-2024-Chaharshanbe 5-Ordibehesht---> read SVSD challenge discription -hyvä
+#today goals: 1-how to read files of dev.trn and dev_TC.ndx
+#             2-read the wav file of address
+#             3-read all files for train and use in ECAPA-TDNN model
+#             4-Do the above work for TC,TW,IC and IW is always 0 and not mentioned
+#             5-Do above for Test also
+#             6-read model with 2 part: Speaker recognizer & Phrase recognizer a multi task learning and SSL pretrained model (WAV2VEc or WavLM)
+#             7-add Phrase recognizer
 print("Hello Practical Speech word date :4-April-2024")
 print("Hello Practical Speech word date :10-April-2024")
 print("Hello Practical Speech word date :15-April-2024")
@@ -30,6 +38,7 @@ print("Hello Practical Speech word date :19-April-2024 = 31-farvardin-1403")
 print("Hello Practical Speech word date :20-April-2024 = 1-ordibehesht-1403")
 print("Hello Practical Speech word date :21-April-2024 = 2-ordibehesht-1403")
 print("Hello Practical Speech word date :22-April-2024 = 3-ordibehesht-1403")
+print("Hello Practical Speech word date :24-April-2024 = 5-ordibehesht-1403")
 #code address : /code1-29-3-2024/TD-SV-v1/ECAPA-TDNN-main
 # trn address file: /mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess
 # ndx address file: /mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess
