@@ -1,6 +1,7 @@
 #                                           In the name of GOD
 #Author: Maryam Afshari
 #24-4-2024-Chaharshanbe 5-Ordibehesht---> read SVSD challenge discription -hyvä -Vaasa
+#26-4-2024-Jomee - 7-ordibehesht 
 
 import numpy as np
 
@@ -13,12 +14,13 @@ output_file_path = '../../../ResultFile1-24-4-2024/train_labels.txt'
 
 # Open the input file and read the lines
 with open(input_file_path, 'r') as file:
-    lines = file.readlines()[:4]  # Read only the first 4 lines
+    # lines = file.readlines()[:4]  # Read only the first 4 lines
+    lines = file.readlines()
 
 # Open the output file to write the results
 with open(output_file_path, 'w') as output_file:
     # Write the header line
-    output_file.write('Train_file_id,Speaker_id,Phrase_id,label\n')
+    output_file.write('Train_file_id Speaker_id Phrase_id label\n')
     
     # Process each line from the input file
     for line in lines:
