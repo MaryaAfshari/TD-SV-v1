@@ -48,7 +48,7 @@ with open(output_file_path, 'w') as output_file:
         for utt_path in parts[1:]:
             # Write the formatted output to the train_labels.txt
             # Joining model_id, speaker_id, phrase_id, Phrase_path, and label with comma separation
-            output_file.write(f"{model_id},{speaker_id},{phrase_id},{utt_path},{label}\n")
+            output_file.write(f"{model_id} {speaker_id} {phrase_id} {utt_path} {label}\n")
 
 print("Data for the first 4 lines has been written to train_labels.txt successfully.")
 #check the number of lines written in 
