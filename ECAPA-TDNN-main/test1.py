@@ -29,6 +29,7 @@ def split_and_print(line):
 #             5-Do above for Test also
 #             6-read model with 2 part: Speaker recognizer & Phrase recognizer a multi task learning and SSL pretrained model (WAV2VEc or WavLM)
 #             7-add Phrase recognizer
+#26-5-2024-Jomeh-7-ordibehesht  --->
 print("Hello Practical Speech word date :4-April-2024")
 print("Hello Practical Speech word date :10-April-2024")
 print("Hello Practical Speech word date :15-April-2024")
@@ -39,6 +40,7 @@ print("Hello Practical Speech word date :20-April-2024 = 1-ordibehesht-1403")
 print("Hello Practical Speech word date :21-April-2024 = 2-ordibehesht-1403")
 print("Hello Practical Speech word date :22-April-2024 = 3-ordibehesht-1403")
 print("Hello Practical Speech word date :24-April-2024 = 5-ordibehesht-1403")
+print("Hello Practical Speech word date :26-April-2024 = 7-ordibehesht-1403")
 #code address : /code1-29-3-2024/TD-SV-v1/ECAPA-TDNN-main
 # trn address file: /mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess
 # ndx address file: /mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess

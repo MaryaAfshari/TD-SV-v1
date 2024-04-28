@@ -22,7 +22,7 @@ print(f"The file contains {number_of_lines} lines in {input_file_path}.")
 
 line_count = 0
 # Open the output file to write the results
-with open(output_file_path, 'w') as output_file:
+with open(output_file_path, 'a') as output_file:
     # Write the header line
     output_file.write('Train_file_id Speaker_id Phrase_id label\n')
 
@@ -59,4 +59,5 @@ with open(output_file_path, 'r') as file:
     for line in file:
         line_count += 1
 
+print(f"The file contains {number_of_lines} lines in {input_file_path}.")
 print(f"The file in {output_file_path} has {line_count} lines.")
