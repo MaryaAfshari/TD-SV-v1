@@ -14,7 +14,8 @@ with open(input_file_path, 'r') as file:
     lines = file.readlines()[:20] 
 
 number_of_lines = len(lines)
-print(f"The file contains {number_of_lines} lines in {input_file_path}.")
+print("The file contains " + str(number_of_lines) + " lines in " + input_file_path + ".")
+
 
 for line in lines:
     parts = line.strip().split()
