@@ -2,8 +2,8 @@
 #Author: Maryam Afshari
 #05-05-2024-Yekshanbe 16-Ordibehesht-1403  ----> 
 import numpy as np
-/mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk
-background_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess/background.trn"
+#/mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk
+background_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/background.trn"
 #ndx_dev_TC_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess/dev_IC.ndx" #Target Correct
 
 input_file_path =  background_addr 
