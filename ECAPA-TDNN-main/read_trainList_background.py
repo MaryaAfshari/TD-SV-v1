@@ -69,7 +69,8 @@ data_label = []
 
 #second try : 
 with open(output_file_path, 'r') as file:
-    lines = file.readlines()[:100]  # Read only the first 100 lines
+    #lines = file.readlines()[:100]  # Read only the first 100 lines
+    lines = file.readlines()
     
     #dictkeys = list(set([x.split()[0] for x in lines]))
     unique_speakers = set(line.split()[0] for line in lines)

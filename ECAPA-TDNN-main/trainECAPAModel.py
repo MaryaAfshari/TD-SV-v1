@@ -32,14 +32,17 @@ parser.add_argument('--eval_list',  type=str,   default="/data08/VoxCeleb1/veri_
 parser.add_argument('--eval_path',  type=str,   default="/data08/VoxCeleb1/test/wav",                    help='The path of the evaluation data, eg:"/data08/VoxCeleb1/test/wav" in my case')
 parser.add_argument('--musan_path', type=str,   default="/data08/Others/musan_split",                    help='The path to the MUSAN set, eg:"/data08/Others/musan_split" in my case')
 parser.add_argument('--rir_path',   type=str,   default="/data08/Others/RIRS_NOISES/simulated_rirs",     help='The path to the RIR set, eg:"/data08/Others/RIRS_NOISES/simulated_rirs" in my case');
-parser.add_argument('--save_path',  type=str,   default="exps/exp1",                                     help='Path to save the score.txt and models')
+#../../../../../mnt/disk1/users/afshari/MyEcapaModel
+#parser.add_argument('--save_path',  type=str,   default="exps/exp1",                                     help='Path to save the score.txt and models')
+parser.add_argument('--save_path',  type=str,   default="../../../../../mnt/disk1/users/afshari/MyEcapaModel",                                     help='Path to save the score.txt and models')
 parser.add_argument('--initial_model',  type=str,   default="",                                          help='Path of the initial_model')
 
 ## Model and Loss settings
 parser.add_argument('--C',       type=int,   default=1024,   help='Channel size for the speaker encoder')
 parser.add_argument('--m',       type=float, default=0.2,    help='Loss margin in AAM softmax')
 parser.add_argument('--s',       type=float, default=30,     help='Loss scale in AAM softmax')
-parser.add_argument('--n_class', type=int,   default=5994,   help='Number of speakers')
+#parser.add_argument('--n_class', type=int,   default=5994,   help='Number of speakers')
+parser.add_argument('--n_class', type=int,   default=963,   help='Number of speakers')
 
 ## Command
 parser.add_argument('--eval',    dest='eval', action='store_true', help='Only do evaluation')
@@ -82,7 +85,7 @@ elif len(modelfiles) >= 1:
 	s.load_parameters(modelfiles[-1])
 ## Otherwise, system will train from scratch
 else:
-	print("I am start the training ...")
+	print("Hello, I am start the training ...")
 	epoch = 1
 	s = ECAPAModel(**vars(args))
 
