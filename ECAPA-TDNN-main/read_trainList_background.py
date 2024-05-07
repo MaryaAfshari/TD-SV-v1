@@ -82,6 +82,6 @@ with open(output_file_path, 'r') as file:
         data_label.append(speaker_label)
         data_list.append(file_name)
 
-print(f"speaker [0]= {data_label[0]},wav_path[0] = {data_label[0]} ")
-print(f"speaker [10]= {data_label[10]},wav_path[10] = {data_label[10]} ")
-print(f"speaker [99]= {data_label[99]},wav_path[99] = {data_label[99]} ")
+print(f"speaker [0]= {data_label[0]},wav_path[0] = {data_list[0]} ")
+print(f"speaker [10]= {data_label[10]},wav_path[10] = {data_list[10]} ")
+print(f"speaker [99]= {data_label[99]},wav_path[99] = {data_list[99]} ")
