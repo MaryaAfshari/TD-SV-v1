@@ -30,6 +30,7 @@ class train_loader(object):
 		for index, line in enumerate(lines):
 			speaker_label = dictkeys[line.split()[0]]
 			file_name     = os.path.join(train_path, line.split()[1])
+			file_name += ".wav" # I added for make a path 18-2-1403 Ordibehesht - May
 			self.data_label.append(speaker_label)
 			self.data_list.append(file_name)
 
@@ -45,7 +46,7 @@ class train_loader(object):
 		audio = numpy.stack([audio],axis=0)
 		# Data Augmentation
 		#augtype = random.randint(0,5)
-		augtype = 0
+		augtype = 0 # I have changed it at 18-2-1403 Ordibehesht - May
 		if augtype == 0:   # Original
 			audio = audio
 		elif augtype == 1: # Reverberation

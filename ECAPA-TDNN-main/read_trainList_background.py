@@ -71,7 +71,14 @@ data_label = []
 with open(output_file_path, 'r') as file:
     lines = file.readlines()[:100]  # Read only the first 100 lines
     
-    dictkeys = list(set([x.split()[0] for x in lines]))
+    #dictkeys = list(set([x.split()[0] for x in lines]))
+    unique_speakers = set(line.split()[0] for line in lines)
+    unique_speaker_count = len(unique_speakers)
+
+    print(f"Number of unique speakers: {unique_speaker_count}")
+    print("Unique speakers:", unique_speakers)
+
+    dictkeys = list(unique_speakers)
     dictkeys.sort()
     dictkeys = {key: ii for ii, key in enumerate(dictkeys)}
     
