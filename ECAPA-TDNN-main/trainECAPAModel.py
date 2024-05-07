@@ -18,8 +18,13 @@ parser.add_argument('--lr',         type=float, default=0.001,   help='Learning 
 parser.add_argument("--lr_decay",   type=float, default=0.97,    help='Learning rate decay every [test_step] epochs')
 
 ## Training and evaluation path/lists, save path
-parser.add_argument('--train_list', type=str,   default="/data08/VoxCeleb2/train_list.txt",     help='The path of the training list, https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/train_list.txt')
-parser.add_argument('--train_path', type=str,   default="/data08/VoxCeleb2/train/wav",                    help='The path of the training data, eg:"/data08/VoxCeleb2/train/wav" in my case')
+#parser.add_argument('--train_list', type=str,   default="/data08/VoxCeleb2/train_list.txt",     help='The path of the training list, https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/train_list.txt')
+#"../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/background.trn"
+parser.add_argument('--train_list', type=str,   default="../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/background.trn",     help='The path of the training list, https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/train_list.txt')
+#parser.add_argument('--train_path', type=str,   default="/data08/VoxCeleb2/train/wav",                    help='The path of the training data, eg:"/data08/VoxCeleb2/train/wav" in my case')
+#"../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/background.trn"
+#"../../../../../mnt/disk1/data/DeepMine/wav"
+parser.add_argument('--train_path', type=str,   default="../../../../../mnt/disk1/data/DeepMine/wav",                    help='The path of the training data, eg:"/data08/VoxCeleb2/train/wav" in my case')
 parser.add_argument('--eval_list',  type=str,   default="/data08/VoxCeleb1/veri_test2.txt",              help='The path of the evaluation list, veri_test2.txt comes from https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt')
 parser.add_argument('--eval_path',  type=str,   default="/data08/VoxCeleb1/test/wav",                    help='The path of the evaluation data, eg:"/data08/VoxCeleb1/test/wav" in my case')
 parser.add_argument('--musan_path', type=str,   default="/data08/Others/musan_split",                    help='The path to the MUSAN set, eg:"/data08/Others/musan_split" in my case')

@@ -2,6 +2,7 @@
 #Author: Maryam Afshari
 #05-05-2024-Yekshanbe 16-Ordibehesht-1403  ----> initial this code
 #06-05-2024-Doshanbe 17-Ordibehesht-1403 ---> write trainlist in a code
+#07-05-2024-Seshanbe 18-Ordibehesht-1403-  "YA arhamarahemin" ba tawasol be hazrat Zahar va Emam Sadegh (S)
 import numpy as np
 import argparse, glob, os, torch, warnings, time
 #/mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk
@@ -77,6 +78,7 @@ with open(output_file_path, 'r') as file:
     for line in lines:
         speaker_label = dictkeys[line.split()[0]]
         file_name = os.path.join(train_path, line.split()[1])
+        file_name += ".wav"
         data_label.append(speaker_label)
         data_list.append(file_name)
 
