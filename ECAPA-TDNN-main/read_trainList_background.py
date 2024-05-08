@@ -101,4 +101,4 @@ audio, sr = soundfile.read(data_list[0])
 length = num_frames * 160 + 240
 print(f"speaker [0]= {data_label[0]}, audio.shape[0]= {audio.shape[0]}, length = {length} ")
 audio, sr = soundfile.read(data_list[1])		
-print(f"speaker [1]= {data_label[1]}, audio.shape[1]= {audio.shape[1]}, length = {length} ")
+print(f"speaker [1]= {data_label[1]}, audio.shape[0]= {audio.shape[0]}, sr = {sr}, length = {length} ")

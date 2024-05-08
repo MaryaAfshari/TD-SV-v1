@@ -86,10 +86,10 @@ elif len(modelfiles) >= 1:
 	s.load_parameters(modelfiles[-1])
 ## Otherwise, system will train from scratch
 else:
-	print("Hello, I am start the training ... trainECAPAModel.py")
+	print("Hello, I called the model ... trainECAPAModel.py")
 	epoch = 1
 	s = ECAPAModel(**vars(args))
-	print("Over")
+	print("Over calling model'")
 
 EERs = []
 score_file = open(args.score_save_path, "a+")

@@ -27,6 +27,8 @@ class ECAPAModel(nn.Module):
 		self.scheduler.step(epoch - 1)
 		index, top1, loss = 0, 0, 0
 		lr = self.optim.param_groups[0]['lr']
+		print("Loader Lenght = ")
+		print(loader.__len__())
 		for num, (data, labels) in enumerate(loader, start = 1):
 			self.zero_grad()
 			labels            = torch.LongTensor(labels).cuda()
