@@ -3,8 +3,10 @@
 #05-05-2024-Yekshanbe 16-Ordibehesht-1403  ----> initial this code
 #06-05-2024-Doshanbe 17-Ordibehesht-1403 ---> write trainlist in a code
 #07-05-2024-Seshanbe 18-Ordibehesht-1403-  "YA arhamarahemin" ba tawasol be hazrat Zahar va Emam Sadegh (S)
+#08-05-2024-May Chaharshanbe 19-2-1403-Ordibehesht - "Ya HAio ya ghaiom"
 import numpy as np
 import argparse, glob, os, torch, warnings, time
+import torch, sys, os, tqdm, numpy, soundfile, time, pickle
 #/mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk
 background_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/background.trn"
 #ndx_dev_TC_addr = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/ndx/ENG/male/100-spk/3-sess/dev_IC.ndx" #Target Correct
@@ -77,7 +79,7 @@ with open(output_file_path, 'r') as file:
     unique_speaker_count = len(unique_speakers)
 
     print(f"Number of unique speakers: {unique_speaker_count}")
-    print("Unique speakers:", unique_speakers)
+    #print("Unique speakers:", unique_speakers)
 
     dictkeys = list(unique_speakers)
     dictkeys.sort()
@@ -93,3 +95,10 @@ with open(output_file_path, 'r') as file:
 print(f"speaker [0]= {data_label[0]},wav_path[0] = {data_list[0]} ")
 print(f"speaker [10]= {data_label[10]},wav_path[10] = {data_list[10]} ")
 print(f"speaker [99]= {data_label[99]},wav_path[99] = {data_list[99]} ")
+#I want to read a wav file
+num_frames = 200
+audio, sr = soundfile.read(data_list[0])		
+length = num_frames * 160 + 240
+print(f"speaker [0]= {data_label[0]}, audio.shape[0]= {audio.shape[0]}, length = {length} ")
+audio, sr = soundfile.read(data_list[1])		
+print(f"speaker [1]= {data_label[1]}, audio.shape[1]= {audio.shape[1]}, length = {length} ")

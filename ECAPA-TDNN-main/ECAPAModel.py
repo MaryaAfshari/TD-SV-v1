@@ -21,7 +21,7 @@ class ECAPAModel(nn.Module):
 		print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f"%(sum(param.numel() for param in self.speaker_encoder.parameters()) / 1024 / 1024))
 
 	def train_network(self, epoch, loader):
-		print("hello, this in train network ...")
+		print("hello, this in train network ... ECAPAModel.py")
 		self.train()
 		## Update the learning rate based on the current epcoh
 		self.scheduler.step(epoch - 1)

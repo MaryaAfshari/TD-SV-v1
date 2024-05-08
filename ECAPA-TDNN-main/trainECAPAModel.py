@@ -1,7 +1,8 @@
 '''
 This is the main code of the ECAPATDNN project, to define the parameters and build the construction
 '''
-
+#"Ya haio ya ghaiom"
+#08-05-2024 19 Ordibehesht Chaharshanbe
 import argparse, glob, os, torch, warnings, time
 from tools import *
 from dataLoader import train_loader
@@ -13,7 +14,7 @@ parser.add_argument('--num_frames', type=int,   default=200,     help='Duration 
 #parser.add_argument('--max_epoch',  type=int,   default=80,      help='Maximum number of epochs')#change it 
 parser.add_argument('--max_epoch',  type=int,   default=20,      help='Maximum number of epochs')
 #parser.add_argument('--batch_size', type=int,   default=400,     help='Batch size')
-parser.add_argument('--batch_size', type=int,   default=100,     help='Batch size')
+parser.add_argument('--batch_size', type=int,   default=4,     help='Batch size')
 #parser.add_argument('--n_cpu',      type=int,   default=4,       help='Number of loader threads')
 parser.add_argument('--n_cpu',      type=int,   default=1,       help='Number of loader threads')
 parser.add_argument('--test_step',  type=int,   default=1,       help='Test and save every [test_step] epochs')
@@ -85,9 +86,10 @@ elif len(modelfiles) >= 1:
 	s.load_parameters(modelfiles[-1])
 ## Otherwise, system will train from scratch
 else:
-	print("Hello, I am start the training ...")
+	print("Hello, I am start the training ... trainECAPAModel.py")
 	epoch = 1
 	s = ECAPAModel(**vars(args))
+	print("Over")
 
 EERs = []
 score_file = open(args.score_save_path, "a+")
