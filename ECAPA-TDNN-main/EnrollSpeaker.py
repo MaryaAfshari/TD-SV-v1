@@ -5,6 +5,12 @@
 #import argparse, glob, os, torch, warnings, time
 #import torch, sys, os, tqdm, numpy, soundfile, time, pickle
 import os
+import numpy as np
+import torch
+import torch.nn.functional as F
+import soundfile as sf
+
+from model import ECAPA_TDNN
 
 DevInputFile = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess/dev.trn"
 DevOutputFile = '../../../ResultFile1-24-4-2024/eval_lists_trn.txt'
@@ -13,6 +19,34 @@ train_path = "../../../../../mnt/disk1/data/DeepMine/wav"
 
 def perform_calculation(file_path):
     return len(file_path)
+
+def compute_file_embeddings(file_path, speaker_encoder):
+    #full_path = os.path.join(file_path, fp) + ".wav"
+    audio, _ = sf.read(full_path)
+
+    # Full utterance
+    data_1 = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
+
+    # Split utterance matrix
+    max_audio = 300 * 160 + 240
+    if audio.shape[0] <= max_audio:
+        shortage = max_audio - audio.shape[0]
+        audio = np.pad(audio, (0, shortage), 'wrap')
+    feats = []
+    startframe = np.linspace(0, audio.shape[0] - max_audio, num=5)
+    for asf in startframe:
+        feats.append(audio[int(asf):int(asf) + max_audio])
+    feats = np.stack(feats, axis=0).astype(np.float)
+    data_2 = torch.FloatTensor(feats).cuda()
+
+    # Speaker embeddings
+    with torch.no_grad():
+        embedding_1 = speaker_encoder.forward(data_1, aug=False)
+        embedding_1 = F.normalize(embedding_1, p=2, dim=1)
+        embedding_2 = speaker_encoder.forward(data_2, aug=False)
+        embedding_2 = F.normalize(embedding_2, p=2, dim=1)
+
+    return [embedding_1, embedding_2]
 
 
 with open(DevInputFile, 'r') as file:
@@ -27,6 +61,8 @@ speakers_files = {}
 embeddings_speakers = {}
 #lines = open(eval_list).read().splitlines()
 #lines = lines.splitlines()
+C=1024
+speaker_encoder = ECAPA_TDNN(C = C).cuda()
 for line in lines:
             parts = line.split()
             speaker = parts[0]
@@ -39,7 +75,8 @@ for line in lines:
                     # fp = os.path.join(train_path, fp)
                     # fp += ".wav"
                     full_path = os.path.join(train_path, fp) + ".wav"
-                    calculations.append(perform_calculation(full_path))
+                    #calculations.append(perform_calculation(full_path))
+                    calculations.append(compute_file_embeddings(full_path,speaker_encoder))
             if calculations:
                 average_result = sum(calculations) / len(calculations)
             else:
