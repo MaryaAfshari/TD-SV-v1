@@ -3,6 +3,7 @@ This is the main code of the ECAPATDNN project, to define the parameters and bui
 '''
 #"Ya haio ya ghaiom"
 #08-05-2024 19 Ordibehesht Chaharshanbe
+#12-05-2024 23 Ordibehesht Yekshanbe "Ya zol jalal val ekram"
 import argparse, glob, os, torch, warnings, time
 from tools import *
 from dataLoader import train_loader

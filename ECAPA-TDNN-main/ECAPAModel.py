@@ -1,7 +1,7 @@
 '''
 This part is used to train the speaker model and evaluate the performances
 '''
-
+#09-05-2024-May Panjshanbe 19-2-1403-Ordibehesht - "Ya la elaha ella allah "
 import torch, sys, os, tqdm, numpy, soundfile, time, pickle
 import torch.nn as nn
 from tools import *
