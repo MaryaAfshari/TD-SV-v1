@@ -10,6 +10,7 @@ DevInputFile = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/EN
 DevOutputFile = '../../../ResultFile1-24-4-2024/eval_lists_trn.txt'
 output_file_path = "../../../ResultFile1-24-4-2024/embeddings_speakers_results.txt"
 train_path = "../../../../../mnt/disk1/data/DeepMine/wav"
+
 def perform_calculation(file_path):
     return len(file_path)
 
@@ -25,7 +26,7 @@ print(".....................................................")
 speakers_files = {}
 embeddings_speakers = {}
 #lines = open(eval_list).read().splitlines()
-lines = lines.splitlines()
+#lines = lines.splitlines()
 for line in lines:
             parts = line.split()
             speaker = parts[0]
