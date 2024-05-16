@@ -39,7 +39,7 @@ dev_output_file = '../../../ResultFile1-24-4-2024/dev_speaker_data.txt'
 
 
 speaker_data = parse_eval_file(dev_input_file)
-#write_speaker_data_to_file(speaker_data, dev_output_file)
+write_speaker_data_to_file(speaker_data, dev_output_file)
 
-#print(f'Speaker data has been written to {dev_output_file}')
-process_wav_files_by_speaker(speaker_data, 'Spk000001')
+print(f'Speaker data has been written to {dev_output_file}')
+process_wav_files_by_speaker(speaker_data, 'Spk000191')
