@@ -40,12 +40,16 @@ def process_wav_files_by_speaker(speaker_data, speaker_id):
                 print(f'Processing {wav_file} for speaker {speaker_id}, phrase {phrase_id}, model {model_index}, audio length: {total_length}')
                 #print(f'Processing {wav_file} for speaker {speaker_id}, phrase {phrase_id}, model {model_index}, sample rate: {sr}')
                 total_wav_files += 1 
-                embedding = extract_embedding(speaker_encoder, audio)
-                embeddings.append(embedding)
+                #embedding = extract_embedding(speaker_encoder, audio)
+                embedding_1, embedding_2 = extract_embedding(speaker_encoder, audio)
+                embeddings.append((embedding_1.cpu().numpy(), embedding_2.cpu().numpy()))
                 # Implement your processing logic here
         print(f'Total number of wav files for speaker {speaker_id}: {total_wav_files}')
         if embeddings:
-            avg_embedding = numpy.mean(embeddings, axis=0)
+            #avg_embedding = numpy.mean(embeddings, axis=0)
+            avg_embedding_1 = numpy.mean([emb[0] for emb in embeddings], axis=0)
+            avg_embedding_2 = numpy.mean([emb[1] for emb in embeddings], axis=0)
+            avg_embedding = (avg_embedding_1 + avg_embedding_2) / 2
             print(f'Average embedding for speaker {speaker_id}: {avg_embedding}')
             return avg_embedding
         else:
@@ -63,9 +67,9 @@ def load_audio(audio_path):
 
 
 def extract_embedding(model, audio):
-    model.eval()#check this ----push and pull required tarvitse:)
-    embedding_audio = {}
     speaker_encoder = model
+    speaker_encoder.eval()#check this ----push and pull required tarvitse:)
+    embedding_audio = {}
     # Full utterance
     data_1 = torch.FloatTensor(numpy.stack([audio],axis=0)).cuda()
     # Spliited utterance matrix
@@ -85,8 +89,8 @@ def extract_embedding(model, audio):
         embedding_1 = F.normalize(embedding_1, p=2, dim=1)
         embedding_2 = speaker_encoder.forward(data_2, aug = False)
         embedding_2 = F.normalize(embedding_2, p=2, dim=1)
-    embedding_audio[audio] = [embedding_1, embedding_2]
-    return embedding_audio
+    #embedding_audio[audio] = [embedding_1, embedding_2]
+    return embedding_1, embedding_2
 
 dev_input_file = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess/dev.trn"
 dev_output_file = '../../../ResultFile1-24-4-2024/dev_speaker_data.txt'
@@ -97,4 +101,13 @@ speaker_data = parse_eval_file(dev_input_file)
 write_speaker_data_to_file(speaker_data, dev_output_file)
 
 print(f'Speaker data has been written to {dev_output_file}')
-print(process_wav_files_by_speaker(speaker_data, 'Spk000191'))
+a,b = process_wav_files_by_speaker(speaker_data, 'Spk000191')
+print(len(a),len(b))
+print(f'len(a) =  {len(a)}')
+print(f'len(b) =  {len(b)}')
+print(f'shape(a) =  {a.shape}')
+print(f'shape(b) =  {b.shape}')
+print(f'a =  {a}')
+print("------------------------------------------")
+print(f'b =  {b}')
+print(".........................................")
