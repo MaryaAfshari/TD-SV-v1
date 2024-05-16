@@ -27,10 +27,14 @@ def write_speaker_data_to_file(speaker_data, output_file_path):
 
 def process_wav_files_by_speaker(speaker_data, speaker_id):
     if speaker_id in speaker_data:
+        #total_length = 0 
+        total_wav_files = 0
         for phrase_id, model_index, wav_files in speaker_data[speaker_id]:
             for wav_file in wav_files:
                 print(f'Processing {wav_file} for speaker {speaker_id}, phrase {phrase_id}, model {model_index}')
+                total_wav_files += 1 
                 # Implement your processing logic here
+        print(f'Total number of wav files for speaker {speaker_id}: {total_wav_files}')
     else:
         print(f'No data found for speaker {speaker_id}')
 
