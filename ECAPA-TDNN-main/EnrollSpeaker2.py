@@ -3,7 +3,7 @@
 def parse_eval_file(file_path):
     speaker_data = {}
     with open(file_path, 'r') as file:
-        for line in file.strip().split('\n'):
+        for line in file:
             parts = line.strip().split()
             model_id = parts[0]
             speaker_id, phrase_id, model_index = model_id.split('_')
@@ -11,6 +11,7 @@ def parse_eval_file(file_path):
             if speaker_id not in speaker_data:
                 speaker_data[speaker_id] = []
             # Store the entire structure for later use
+            #speaker_data[speaker_id][phrase_id][model_index] = wav_files
             speaker_data[speaker_id].append((phrase_id, model_index, wav_files))
     return speaker_data
 
