@@ -42,14 +42,15 @@ def process_wav_files_by_speaker(speaker_data, speaker_id):
 
 
 def load_audio(audio_path):
-    import librosa
-    audio, sr = librosa.load(audio_path, sr=16000)
-    #audio, _  = soundfile.read(os.path.join(eval_path, file))
+    #import librosa
+    #audio, sr = librosa.load(audio_path, sr=16000)
+    audio, sr  = soundfile.read(os.path.join(wav_path, audio_path)+ ".wav")
+
     return audio, sr
 
 dev_input_file = "../../../../../mnt/disk1/data/DeepMine/key/text-dependent/trn/ENG/male/100-spk/3-sess/dev.trn"
 dev_output_file = '../../../ResultFile1-24-4-2024/dev_speaker_data.txt'
-
+wav_path = "../../../../../mnt/disk1/data/DeepMine/wav"
 
 speaker_data = parse_eval_file(dev_input_file)
 write_speaker_data_to_file(speaker_data, dev_output_file)
