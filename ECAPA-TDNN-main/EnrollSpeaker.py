@@ -1,5 +1,6 @@
 #09-05-2024-May Panjshanbe 19-2-1403-Ordibehesht - "Ya la elaha ella allah "
-#12-05-2024 23 Ordibehesht Yekshanbe "Ya zol jalal val ekram"
+#12-05-2024 23 Ordibehesht 1403 Yekshanbe "Ya zol jalal val ekram"
+#"16-05-2024" 27 Ordibehesht 1403 Panjshanbe "Ya Malekolhagholmobin"
 
 #import numpy as np
 #import argparse, glob, os, torch, warnings, time
