@@ -63,6 +63,7 @@ def load_audio(audio_path):
 
 
 def extract_embedding(model, audio):
+    model.eval()#check this ----push and pull required tarvitse:)
     embedding_audio = {}
     speaker_encoder = model
     # Full utterance
