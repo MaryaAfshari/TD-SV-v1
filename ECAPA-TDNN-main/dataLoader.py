@@ -1,7 +1,7 @@
 '''
 DataLoader for training
 '''
-
+#change some lines ----- 31.5.2024---10.3.1403
 import glob, numpy, os, random, soundfile, torch
 from scipy import signal
 
@@ -20,19 +20,30 @@ class train_loader(object):
 				self.noiselist[file.split('/')[-4]] = []
 			self.noiselist[file.split('/')[-4]].append(file)
 		self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'))
-		# Load data & labels
-		self.data_list  = []
-		self.data_label = []
+    
+    # Load data & labels
+    self.data_list = []
+    self.speaker_labels = []
+    self.phrase_labels = []  # New phrase labels
+		#self.data_list  = []
+		#self.data_label = []
 		lines = open(train_list).read().splitlines()
-		dictkeys = list(set([x.split()[0] for x in lines]))
+		#dictkeys = list(set([x.split()[0] for x in lines]))
+    dictkeys = list(set([x.split()[1] for x in lines]))  # Changed to index 1 for speaker-id
 		dictkeys.sort()
 		dictkeys = { key : ii for ii, key in enumerate(dictkeys) }
 		for index, line in enumerate(lines):
-			speaker_label = dictkeys[line.split()[0]]
-			file_name     = os.path.join(train_path, line.split()[1])
+			#speaker_label = dictkeys[line.split()[0]]
+      speaker_label = dictkeys[line.split()[1]]  # Changed to index 1 for speaker-id
+			phrase_label = int(line.split()[2])  # Assuming phrase ID is the third column
+      #file_name     = os.path.join(train_path, line.split()[1])
+      file_name = os.path.join(train_path, line.split()[0])  # Changed to index 0 for train-file-id
 			file_name += ".wav" # I added for make a path 18-2-1403 Ordibehesht - May
-			self.data_label.append(speaker_label)
-			self.data_list.append(file_name)
+			#self.data_label.append(speaker_label)
+			#self.data_list.append(file_name)
+      self.speaker_labels.append(speaker_label)
+      self.phrase_labels.append(phrase_label)
+      self.data_list.append(file_name)
 
 	def __getitem__(self, index):
 		# Read the utterance and randomly select the segment
