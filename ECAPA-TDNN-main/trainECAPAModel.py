@@ -7,6 +7,7 @@ This is the main code of the ECAPATDNN project, to define the parameters and bui
 
 #30-5-2024 10 khordad Panjshanbe Google colab
 #31-5-2024 11 khordad Jomee Server
+#here is in my laptop because server is ok now
 import argparse, glob, os, torch, warnings, time
 from tools import *
 from dataLoader2 import train_loader
