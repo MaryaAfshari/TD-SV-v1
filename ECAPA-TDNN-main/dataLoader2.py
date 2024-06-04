@@ -39,12 +39,15 @@ class train_loader(object):
                 self.speaker_labels.append(speaker_label)
                 self.phrase_labels.append(phrase_label)
                 self.data_list.append(file_name)
+                print(f"Speaker Label: {speaker_label}, Phrase Label: {phrase_label}, File Name: {file_name}")
             except ValueError:
                 print(f"Skipping line with non-integer phrase ID: {line}")
 
     def __getitem__(self, index):
         # Read the utterance and randomly select the segment
-        audio, sr = soundfile.read(self.data_list[index])
+        file_name = self.data_list[index]
+        print(f"Reading file: {file_name}")
+        audio, sr = soundfile.read(file_name)
         length = self.num_frames * 160 + 240
         if audio.shape[0] <= length:
             shortage = length - audio.shape[0]
