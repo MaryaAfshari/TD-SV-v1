@@ -21,7 +21,7 @@ class train_loader(object):
 			self.noiselist[file.split('/')[-4]].append(file)
 		self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'))
     
-    # Load data & labels
+    	# Load data & labels
     self.data_list = []
     self.speaker_labels = []
     self.phrase_labels = []  # New phrase labels

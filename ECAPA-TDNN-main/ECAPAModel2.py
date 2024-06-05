@@ -52,7 +52,7 @@ class ECAPAModel(nn.Module):
             index += len(speaker_labels)
             top1 += prec
             loss += nloss.detach().cpu().numpy()
-            
+
             sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
                              " [%2d] Lr: %5f, Training: %.2f%%, " % (epoch, lr, 100 * (num / loader.__len__())) + \
                              " Loss: %.5f, ACC: %2.2f%% \r" % (loss / (num), top1 / index * len(speaker_labels)))
@@ -65,6 +65,7 @@ class ECAPAModel(nn.Module):
         files = []
         embeddings = {}
         lines = open(eval_list).read().splitlines()
+        lines = lines[1:]  # Skip the header row
         for line in lines:
             files.append(line.split()[1])
             files.append(line.split()[2])
@@ -118,6 +119,7 @@ class ECAPAModel(nn.Module):
         self.eval()
         enrollments = {}
         lines = open(enroll_list).read().splitlines()
+        lines = lines[1:]  # Skip the header row
         for line in lines:
             parts = line.split()
             model_id = parts[0]
