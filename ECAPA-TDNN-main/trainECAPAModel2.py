@@ -37,7 +37,8 @@ parser.add_argument('--path_save_model', type=str, default="../../../../../mnt/d
 parser.add_argument('--C', type=int, default=1024, help='Channel size for the speaker encoder')
 parser.add_argument('--m', type=float, default=0.2, help='Loss margin in AAM softmax')
 parser.add_argument('--s', type=float, default=30, help='Loss scale in AAM softmax')
-parser.add_argument('--n_class', type=int, default=963, help='Number of speakers')
+#parser.add_argument('--n_class', type=int, default=963, help='Number of speakers')
+parser.add_argument('--n_class', type=int, default=1620, help='Number of speakers')
 
 # Command
 parser.add_argument('--eval', dest='eval', action='store_true', help='Only do evaluation')

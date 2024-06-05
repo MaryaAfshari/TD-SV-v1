@@ -39,7 +39,7 @@ class train_loader(object):
                 self.speaker_labels.append(speaker_label)
                 self.phrase_labels.append(phrase_label)
                 self.data_list.append(file_name)
-                print(f"Speaker Label: {speaker_label}, Phrase Label: {phrase_label}, File Name: {file_name}")
+                #print(f"Speaker Label: {speaker_label}, Phrase Label: {phrase_label}, File Name: {file_name}")
             except ValueError:
                 print(f"Skipping line with non-integer phrase ID: {line}")
 
