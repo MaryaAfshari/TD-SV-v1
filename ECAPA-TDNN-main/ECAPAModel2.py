@@ -25,6 +25,7 @@ class ECAPAModel(nn.Module):
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size=test_step, gamma=lr_decay)
         print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f" % (sum(param.numel() for param in self.speaker_encoder.parameters()) / 1024 / 1024))
 
+#train_network Method ...
     def train_network(self, epoch, loader):
         print("hello, this in train network ... ECAPAModel.py")
         self.train()
@@ -38,10 +39,10 @@ class ECAPAModel(nn.Module):
             self.zero_grad()
             speaker_labels = torch.LongTensor(speaker_labels).cuda()
             # Print data for debugging
-            print(f"Data batch {num}:")
-            print(f"  - Data shape: {data.shape}")
-            print(f"  - Speaker labels: {speaker_labels}")
-            print(f"  - Phrase labels: {phrase_labels}")
+            # print(f"Data batch {num}:")
+            # print(f"  - Data shape: {data.shape}")
+            # print(f"  - Speaker labels: {speaker_labels}")
+            # print(f"  - Phrase labels: {phrase_labels}")
             # Forward pass
             speaker_embedding = self.speaker_encoder.forward(data.cuda(), aug=True)
             nloss, prec = self.speaker_loss.forward(speaker_embedding, speaker_labels)
@@ -60,6 +61,7 @@ class ECAPAModel(nn.Module):
         sys.stdout.write("\n")
         return loss / num, lr, top1 / index * len(speaker_labels)
 
+#eval_network Method ...
     def eval_network(self, eval_list, eval_path):
         self.eval()
         files = []
@@ -73,7 +75,9 @@ class ECAPAModel(nn.Module):
         setfiles.sort()
 
         for idx, file in tqdm.tqdm(enumerate(setfiles), total=len(setfiles)):
-            audio, _ = sf.read(os.path.join(eval_path, file))
+            file_name =os.path.join(eval_path, file)
+            file_name += ".wav" 
+            audio, _ = sf.read(file_name)
             # Full utterance
             data_1 = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
 
@@ -115,6 +119,7 @@ class ECAPAModel(nn.Module):
 
         return EER, minDCF
 
+#enroll_network Method ...
     def enroll_network(self, enroll_list, enroll_path, path_save_model):
         self.eval()
         enrollments = {}
@@ -126,7 +131,9 @@ class ECAPAModel(nn.Module):
             enroll_files = parts[3:]  # Enrollment file IDs
             embeddings = []
             for file in enroll_files:
-                audio, _ = sf.read(os.path.join(enroll_path, file))
+                file_name = os.path.join(enroll_path, file)
+                file_name += ".wav" 
+                audio, _ = sf.read(file_name)
                 data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
                 with torch.no_grad():
                     embedding = self.speaker_encoder.forward(data, aug=False)
@@ -141,6 +148,7 @@ class ECAPAModel(nn.Module):
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
             pickle.dump(enrollments, f)
 
+#test_network Method ...
     def test_network(self, test_list, test_path, path_save_model):
         self.eval()
         # with open("enrollments.pkl", "rb") as f:
@@ -150,6 +158,7 @@ class ECAPAModel(nn.Module):
 
         scores, labels = [], []
         lines = open(test_list).read().splitlines()
+        lines = lines[1:]  # Skip the header row
         for line in lines:
             parts = line.split()
             model_id = parts[0]
@@ -161,8 +170,10 @@ class ECAPAModel(nn.Module):
             else:
                 label = 0
             #label = int(parts[2])
-
-            audio, _ = sf.read(os.path.join(test_path, test_file))
+            file_name = os.path.join(test_path, test_file)
+            file_name += ".wav"
+            #audio, _ = sf.read(os.path.join(test_path, test_file))
+            audio, _ = sf.read(file_name)
             data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
             with torch.no_grad():
                 test_embedding = self.speaker_encoder.forward(data, aug=False)
