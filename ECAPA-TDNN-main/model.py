@@ -198,3 +198,4 @@ class ECAPA_TDNN(nn.Module):
         x = self.bn6(x)
 
         return x
+    

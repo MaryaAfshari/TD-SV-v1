@@ -148,7 +148,7 @@ class ECAPAModel(nn.Module):
 
         # Ensure the directory exists
         os.makedirs(path_save_model, exist_ok=True)
-        
+
         # Save enrollments using the provided path
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
             pickle.dump(enrollments, f)
@@ -159,6 +159,9 @@ class ECAPAModel(nn.Module):
         self.eval()
         # with open("enrollments.pkl", "rb") as f:
         #     enrollments = pickle.load(f)
+        # Loading enrollments
+        enrollments_path = os.path.join(path_save_model, "enrollments.pkl")
+        print(f"Loading enrollments from {enrollments_path}")
         with open(os.path.join(path_save_model, "enrollments.pkl"), "rb") as f:
             enrollments = pickle.load(f)
 
