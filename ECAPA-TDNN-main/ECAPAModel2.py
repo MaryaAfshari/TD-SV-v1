@@ -63,6 +63,7 @@ class ECAPAModel(nn.Module):
 
 #eval_network Method ...
     def eval_network(self, eval_list, eval_path):
+        print("hello, this in eval network ... ECAPAModel2.py")
         self.eval()
         files = []
         embeddings = {}
@@ -121,6 +122,7 @@ class ECAPAModel(nn.Module):
 
 #enroll_network Method ...
     def enroll_network(self, enroll_list, enroll_path, path_save_model):
+        print("hello, this in enroll network ... ECAPAModel2.py")
         self.eval()
         enrollments = {}
         lines = open(enroll_list).read().splitlines()
@@ -143,6 +145,9 @@ class ECAPAModel(nn.Module):
 
         # with open("enrollments.pkl", "wb") as f:
         #     pickle.dump(enrollments, f)
+
+        # Ensure the directory exists
+        os.makedirs(path_save_model, exist_ok=True)
         
         # Save enrollments using the provided path
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
@@ -150,6 +155,7 @@ class ECAPAModel(nn.Module):
 
 #test_network Method ...
     def test_network(self, test_list, test_path, path_save_model):
+        print("hello, this in test network ... ECAPAModel2.py")
         self.eval()
         # with open("enrollments.pkl", "rb") as f:
         #     enrollments = pickle.load(f)
