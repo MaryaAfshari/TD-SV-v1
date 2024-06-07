@@ -3,13 +3,16 @@
 #Date: 7.6.2024 June 
 #Author: Maryam Afshari -Iranian
 #Part2
+import multiprocessing
+multiprocessing.set_start_method('spawn', True)
+
 import argparse
 import glob
 import os
 import torch
 import warnings
 import time
-from dataLoader4 import train_loader
+from dataLoader6 import train_loader
 from ECAPAModel4 import ECAPAModel
 import numpy as np
 
