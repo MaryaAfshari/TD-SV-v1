@@ -3,7 +3,7 @@
 #Date: 7.6.2024 June 
 #Author: Maryam Afshari -Iranian
 #Part2-Phoneme-aligner
-import torch
+import torch,math
 import torch.nn as nn
 import torch.nn.functional as F
 import torchaudio
