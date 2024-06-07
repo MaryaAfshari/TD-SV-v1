@@ -16,7 +16,7 @@ import numpy as np
 
 from loss3 import AAMsoftmax
 from model4 import ECAPA_TDNN, SEModule
-from dataLoader4 import phrases_to_phonemes
+from dataLoader5 import phrases_to_phonemes
 from tools4 import tuneThresholdfromScore, ComputeErrorRates, ComputeMinDcf
 
 class ECAPAModel(nn.Module):
