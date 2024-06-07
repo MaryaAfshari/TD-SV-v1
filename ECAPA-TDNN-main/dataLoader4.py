@@ -111,4 +111,14 @@ class train_loader(object):
         for noise in noiselist:
             noiseaudio, sr = soundfile.read(noise)
             length = self.num_frames * 160 + 240
-            if noise
+            if noiseaudio.shape[0] <= length:
+                shortage = length - noiseaudio.shape[0]
+                noiseaudio = numpy.pad(noiseaudio, (0, shortage), 'wrap')
+            start_frame = numpy.int64(random.random() * (noiseaudio.shape[0] - length))
+            noiseaudio = noiseaudio[start_frame:start_frame + length]
+            noiseaudio = numpy.stack([noiseaudio], axis=0)
+            noise_db = 10 * numpy.log10(numpy.mean(noiseaudio ** 2) + 1e-4)
+            noisesnr = random.uniform(self.noisesnr[noisecat][0], self.noisesnr[1])
+            noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noisesnr) / 10)) * noiseaudio)
+        noise = numpy.sum(numpy.concatenate(noises, axis=0), axis=0, keepdims=True)
+        return noise + audio
