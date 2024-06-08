@@ -55,10 +55,20 @@ def inspect_train_list_for_ft(train_list):
     with open(train_list, 'r') as f:
         lines = f.readlines()
 
+    total_lines = len(lines) - 1  # Subtract one for the header
+    ft_count = 0
+
     # Print lines containing "FT"
-    for line in lines:
+    for line in lines[1:]:  # Skip the header row
         if "FT" in line:
             print(line)
+            ft_count += 1
+    
+    if total_lines > 0:
+        ft_percentage = (ft_count / total_lines) * 100
+        print(f"'FT' phrase labels account for {ft_count} out of {total_lines} lines ({ft_percentage:.2f}%).")
+    else:
+        print("The train list is empty or only contains the header.")
 
 class train_loader(Dataset):
     def __init__(self, train_list, train_path, musan_path, rir_path, num_frames, **kwargs):
@@ -99,6 +109,10 @@ class train_loader(Dataset):
                 file_name = os.path.join(train_path, line.split()[0])  # Changed to index 0 for train-file-id
                 file_name += ".wav"
                 
+                if phrase_label == "FT":
+                    print(f"Ignoring entry with 'FT' phrase label: {line}")
+                    continue  # Skip this entry
+
                 self.speaker_labels.append(speaker_label)
                 self.phrase_labels.append(phrase_label)
                 self.data_list.append(file_name)
@@ -134,9 +148,18 @@ class train_loader(Dataset):
             audio = self.add_noise(audio, 'music')
 
         # Convert phoneme symbols to numeric IDs
-        phoneme_symbols = phrases_to_phonemes[str(self.phrase_labels[index])]
-        phoneme_ids = torch.LongTensor([ord(ch) for ch in ''.join(phoneme_symbols)])
+        #phoneme_symbols = phrases_to_phonemes[str(self.phrase_labels[index])]
+        #phoneme_ids = torch.LongTensor([ord(ch) for ch in ''.join(phoneme_symbols)])
         
+        # Convert phoneme symbols to numeric IDs
+        phrase_label = str(self.phrase_labels[index])
+        if phrase_label in phrases_to_phonemes:
+            phoneme_symbols = phrases_to_phonemes[phrase_label]
+            phoneme_ids = torch.LongTensor([ord(ch) for ch in ''.join(phoneme_symbols)])
+        else:
+            # Handle the case where the phrase label is not found
+            phoneme_ids = torch.LongTensor([])  # Empty tensor or you can choose a default behavior
+
         return torch.FloatTensor(audio[0]), self.speaker_labels[index], self.phrase_labels[index], phoneme_ids
 
     def __len__(self):
