@@ -26,10 +26,49 @@ phrases_to_phonemes = {
     "10": ["DH", "EH", "R", "-", "IH", "Z", "-", "N", "OW", "-", "S", "AH", "CH", "-", "TH", "IH", "NG", "-", "AE", "Z", "-", "EY", "-", "F", "R", "IY", "-", "L", "AH", "N", "CH"]
 }
 
+def check_phrase_labels(train_list):
+    """
+    This function checks if all phrase labels in the train list are integers.
+    If it finds a non-integer phrase label, it prints the label and exits the check.
+    """
+    lines = open(train_list).read().splitlines()
+    lines = lines[1:]  # Skip the header row
+    all_integers = True
+    for line in lines:
+        try:
+            phrase_label = int(line.split()[2])  # Trying to convert to integer
+        except ValueError:
+            all_integers = False
+            print(f"Non-integer phrase ID found: {line.split()[2]}")
+            break
+    if all_integers:
+        print("All phrase labels are integers.")
+    else:
+        print("There are non-integer phrase labels in the file.")
+
+
+def inspect_train_list_for_ft(train_list):
+    """
+    This function inspects the train list and prints lines that contain the phrase ID "FT".
+    """
+    # Inspect the train list entries
+    with open(train_list, 'r') as f:
+        lines = f.readlines()
+
+    # Print lines containing "FT"
+    for line in lines:
+        if "FT" in line:
+            print(line)
+
 class train_loader(Dataset):
     def __init__(self, train_list, train_path, musan_path, rir_path, num_frames, **kwargs):
         self.train_path = train_path
         self.num_frames = num_frames
+
+        # Call the new functions to check and inspect the train list
+        check_phrase_labels(train_list)
+        inspect_train_list_for_ft(train_list)
+
         # Load and configure augmentation files
         self.noisetypes = ['noise', 'speech', 'music']
         self.noisesnr = {'noise': [0, 15], 'speech': [13, 20], 'music': [5, 15]}
