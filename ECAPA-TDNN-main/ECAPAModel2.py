@@ -18,8 +18,11 @@ class ECAPAModel(nn.Module):
         super(ECAPAModel, self).__init__()
         ## ECAPA-TDNN
         self.speaker_encoder = ECAPA_TDNN(C=C).cuda()
+
         ## Classifier
         self.speaker_loss = AAMsoftmax(n_class=n_class, m=m, s=s).cuda()
+        #add normal softmax  11 class------------ 0-10 phrase 
+        #text_loss
 
         self.optim = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=2e-5)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size=test_step, gamma=lr_decay)
@@ -45,6 +48,7 @@ class ECAPAModel(nn.Module):
             # print(f"  - Phrase labels: {phrase_labels}")
             # Forward pass
             speaker_embedding = self.speaker_encoder.forward(data.cuda(), aug=True)
+            ##
             nloss, prec = self.speaker_loss.forward(speaker_embedding, speaker_labels)
             # Backward pass and optimization
             nloss.backward()

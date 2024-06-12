@@ -26,8 +26,9 @@ def parse_arguments():
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
     parser.add_argument("--lr_decay", type=float, default=0.97, help='Learning rate decay every [test_step] epochs')
     
-    # Paths
-    parser.add_argument('--train_list', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/docs/train_labels.txt", help='The path of the training list')
+    # Paths#
+    #
+    parser.add_argument('--train_list', type=str, default="/mnt/disk1/data/TdSVC2024/task1/docs/train_labels.txt", help='The path of the training list')
     parser.add_argument('--train_path', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/wav/train", help='The path of the training data')
     parser.add_argument('--eval_list', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/docs/dev_trials.txt", help='The path of the evaluation list')
     parser.add_argument('--eval_path', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/wav/evaluation", help='The path of the evaluation data')
