@@ -33,7 +33,6 @@ class ECAPAModel(nn.Module):
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size=test_step, gamma=lr_decay)
         print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f" % (sum(param.numel() for param in self.speaker_encoder.parameters()) / 1024 / 1024))
 
-
     def train_network(self, epoch, loader):
         print("hello, this in train network ... ECAPAModel.py")
         self.train()

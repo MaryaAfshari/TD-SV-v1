@@ -12,9 +12,9 @@ import os
 import torch
 import warnings
 import time
-from tools import *
+from tools2B import *
 from dataLoader2B import train_loader
-from ECAPAModel2B import ECAPAModel
+from ECAPAModel2C import ECAPAModel
 import numpy as np
 
 parser = argparse.ArgumentParser(description="ECAPA_trainer")
@@ -47,6 +47,10 @@ parser.add_argument('--m', type=float, default=0.2, help='Loss margin in AAM sof
 parser.add_argument('--s', type=float, default=30, help='Loss scale in AAM softmax')
 #parser.add_argument('--n_class', type=int, default=963, help='Number of speakers')
 parser.add_argument('--n_class', type=int, default=1620, help='Number of speakers')
+parser.add_argument('--n_class_phoneme', type=int, default=11, help='Number of phoneme classes')
+parser.add_argument('--alphaB', type=float, default=0.2, help='Weight for speaker loss')
+parser.add_argument('--betaB', type=float, default=0.3, help='Weight for phoneme loss')
+
 
 # Command
 parser.add_argument('--eval', dest='eval', action='store_true', help='Only do evaluation')
@@ -89,8 +93,9 @@ score_file = open(os.path.join(args.save_path, "score.txt"), "a+")
 
 while(1):
     # Training for one epoch
-    if epoch > 4: # I should change it later if I want to train from the base ........5.6.5024
-        loss, lr, acc = s.train_network(epoch=epoch, loader=trainLoader)
+    if epoch > 0: # I should change it later if I want to train from the base ........5.6.5024
+        #loss, lr, acc = s.train_network(epoch=epoch, loader=trainLoader)
+        loss, lr, combined_acc = s.train_network(epoch=epoch, loader=trainLoader)
 
     # Enrollment and Testing every [test_step] epochs
     if epoch % args.test_step == 0:
@@ -102,11 +107,16 @@ while(1):
         # Call to test_network
         EER, minDCF = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model)
         EERs.append(EER)
-        print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, acc, EERs[-1], min(EERs)))
-        score_file.write("%d epoch, LR %f, LOSS %f, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%\n" % (epoch, lr, loss, acc, EERs[-1], min(EERs)))
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, Combined ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, combined_acc, EERs[-1], min(EERs)))
+        score_file.write("%d epoch, LR %f, LOSS %f, Combined ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%\n" % (epoch, lr, loss, combined_acc, EERs[-1], min(EERs)))
         score_file.flush()
+        # print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, acc, EERs[-1], min(EERs)))
+        # score_file.write("%d epoch, LR %f, LOSS %f, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%\n" % (epoch, lr, loss, acc, EERs[-1], min(EERs)))
+        # score_file.flush()
 
     if epoch >= args.max_epoch:
         break
 
     epoch += 1
+
+#score_file.close()

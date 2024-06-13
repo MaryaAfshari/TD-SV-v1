@@ -1,3 +1,6 @@
+#Ya Haio ya ghaiom
+#Author: Maryam Afshari -Iranian
+#Date: 12.6.2024 June/ 23.3.1403 Khordad Chaharshanbe Wednesday
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -21,7 +24,7 @@ class ECAPAModel(nn.Module):
 
         ## Classifier
         self.speaker_loss = AAMsoftmax(n_class=n_class, m=m, s=s).cuda()
-        
+
         # Phoneme loss
         self.phoneme_loss = AAMsoftmax(n_class=n_class_phoneme, m=m, s=s).cuda()
 
@@ -29,34 +32,57 @@ class ECAPAModel(nn.Module):
         self.alpha = alphaB
         self.beta = betaB
 
+        #add normal softmax  11 class------------ 0-10 phrase
+         
+        #text_loss
+        #Phoneme_loss
+        #alphaB = 0.2
+        #betaB =0.3
+        #n_class_phoneme = 11
+        #self.phoneme_loss = AAMsoftmax(n_class=n_class_phoneme, m=m, s=s).cuda()
+        #Combine Loss
+        #self.combined_loss = alphaB* self.speaker_loss + betaB * self.phoneme_loss
+
         self.optim = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=2e-5)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size=test_step, gamma=lr_decay)
         print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f" % (sum(param.numel() for param in self.speaker_encoder.parameters()) / 1024 / 1024))
 
-
+#train_network Method ...
     def train_network(self, epoch, loader):
         print("hello, this in train network ... ECAPAModel.py")
         self.train()
+        ## Update the learning rate based on the current epoch
         self.scheduler.step(epoch - 1)
+        #index, top1, loss = 0, 0, 0
         index, speaker_top1, phoneme_top1, loss = 0, 0, 0, 0
         lr = self.optim.param_groups[0]['lr']
-        print("Loader Length = ", len(loader))
-        for num, (data, speaker_labels, phoneme_labels) in enumerate(loader, start=1):
+        print("Loader Length = ", loader.__len__())
+        print("Loader Length 2 = ", len(loader))
+        for num, (data, speaker_labels, phrase_labels) in enumerate(loader, start=1):
             self.zero_grad()
             speaker_labels = torch.LongTensor(speaker_labels).cuda()
-            phoneme_labels = torch.LongTensor(phoneme_labels).cuda()
-
+            phrase_labels = torch.LongTensor(phrase_labels).cuda()
+            # Print data for debugging
+            # print(f"Data batch {num}:")
+            # print(f"  - Data shape: {data.shape}")
+            # print(f"  - Speaker labels: {speaker_labels}")
+            # print(f"  - Phrase labels: {phrase_labels}")
             # Forward pass
             speaker_embedding = self.speaker_encoder.forward(data.cuda(), aug=True)
-            
+            ##
+            ##nloss, prec = self.speaker_loss.forward(speaker_embedding, speaker_labels)
+            # Backward pass and optimization
+            ##nloss.backward()
+            ##self.optim.step()
+
             # Speaker loss
             speaker_loss, speaker_acc = self.speaker_loss.forward(speaker_embedding, speaker_labels)
             
             # Phoneme loss
-            phoneme_loss, phoneme_acc = self.phoneme_loss.forward(speaker_embedding, phoneme_labels)
+            phrase_loss, phrase_acc = self.phoneme_loss.forward(speaker_embedding, phrase_labels)
 
             # Combined loss
-            combined_loss = self.alpha * speaker_loss + self.beta * phoneme_loss
+            combined_loss = self.alpha * speaker_loss + self.beta * phrase_loss
             
             # Backward pass and optimization
             combined_loss.backward()
@@ -64,21 +90,29 @@ class ECAPAModel(nn.Module):
 
             index += len(speaker_labels)
             speaker_top1 += speaker_acc
-            phoneme_top1 += phoneme_acc
+            phrase_top1 += phrase_acc
             loss += combined_loss.detach().cpu().numpy()
+            #top1 += prec
+            #loss += nloss.detach().cpu().numpy()
 
+            # sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
+            #                  " [%2d] Lr: %5f, Training: %.2f%%, " % (epoch, lr, 100 * (num / loader.__len__())) + \
+            #                  " Loss: %.5f, ACC: %2.2f%% \r" % (loss / (num), top1 / index * len(speaker_labels)))
+            # sys.stderr.flush()
             sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
                              " [%2d] Lr: %5f, Training: %.2f%%, " % (epoch, lr, 100 * (num / len(loader))) + \
-                             " Loss: %.5f, Speaker ACC: %2.2f%%, Phoneme ACC: %2.2f%% \r" % 
-                             (loss / num, speaker_top1 / index * len(speaker_labels), phoneme_top1 / index * len(phoneme_labels)))
+                             " Loss: %.5f, Speaker ACC: %2.2f%%, Phrase ACC: %2.2f%% \r" % 
+                             (loss / num, speaker_top1 / index * len(speaker_labels), phrase_top1 / index * len(phrase_labels)))
             sys.stderr.flush()
         sys.stdout.write("\n")
 
         # Calculate combined accuracy
-        combined_acc = ((speaker_top1 / index) + (phoneme_top1 / index)) / 2
+        combined_acc = ((speaker_top1 / index) + (phrase_top1 / index)) / 2
 
+        #return loss / num, lr, top1 / index * len(speaker_labels)
         return loss / num, lr, combined_acc
 
+#eval_network Method ...
     def eval_network(self, eval_list, eval_path):
         print("hello, this in eval network ... ECAPAModel2.py")
         self.eval()
@@ -92,33 +126,32 @@ class ECAPAModel(nn.Module):
         setfiles = list(set(files))
         setfiles.sort()
 
-        with torch.no_grad():
-            for idx, file in tqdm.tqdm(enumerate(setfiles), total=len(setfiles)):
-                file_name = os.path.join(eval_path, file)
-                file_name += ".wav"
-                audio, _ = sf.read(file_name)
-                # Full utterance
-                data_1 = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
+        for idx, file in tqdm.tqdm(enumerate(setfiles), total=len(setfiles)):
+            file_name =os.path.join(eval_path, file)
+            file_name += ".wav" 
+            audio, _ = sf.read(file_name)
+            # Full utterance
+            data_1 = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
 
-                # Splitted utterance matrix
-                max_audio = 300 * 160 + 240
-                if audio.shape[0] <= max_audio:
-                    shortage = max_audio - audio.shape[0]
-                    audio = np.pad(audio, (0, shortage), 'wrap')
-                feats = []
-                startframe = np.linspace(0, audio.shape[0] - max_audio, num=5)
-                for asf in startframe:
-                    feats.append(audio[int(asf):int(asf) + max_audio])
-                feats = np.stack(feats, axis=0).astype(np.float)
-                data_2 = torch.FloatTensor(feats).cuda()
-                # Speaker embeddings
+            # Splitted utterance matrix
+            max_audio = 300 * 160 + 240
+            if audio.shape[0] <= max_audio:
+                shortage = max_audio - audio.shape[0]
+                audio = np.pad(audio, (0, shortage), 'wrap')
+            feats = []
+            startframe = np.linspace(0, audio.shape[0] - max_audio, num=5)
+            for asf in startframe:
+                feats.append(audio[int(asf):int(asf) + max_audio])
+            feats = np.stack(feats, axis=0).astype(np.float)
+            data_2 = torch.FloatTensor(feats).cuda()
+            # Speaker embeddings
+            with torch.no_grad():
                 embedding_1 = self.speaker_encoder.forward(data_1, aug=False)
                 embedding_1 = F.normalize(embedding_1, p=2, dim=1)
                 embedding_2 = self.speaker_encoder.forward(data_2, aug=False)
                 embedding_2 = F.normalize(embedding_2, p=2, dim=1)
-                embeddings[file] = [embedding_1, embedding_2]
-
-        scores, labels = []
+            embeddings[file] = [embedding_1, embedding_2]
+        scores, labels = [], []
 
         for line in lines:
             embedding_11, embedding_12 = embeddings[line.split()[1]]
@@ -138,6 +171,7 @@ class ECAPAModel(nn.Module):
 
         return EER, minDCF
 
+#enroll_network Method ...
     def enroll_network(self, enroll_list, enroll_path, path_save_model):
         print("hello, this in enroll network ... ECAPAModel2.py")
         self.eval()
@@ -152,103 +186,64 @@ class ECAPAModel(nn.Module):
             embeddings = []
             for file in enroll_files:
                 file_name = os.path.join(enroll_path, file)
-                file_name += ".wav"
+                file_name += ".wav" 
                 audio, _ = sf.read(file_name)
                 data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
                 with torch.no_grad():
                     embedding = self.speaker_encoder.forward(data, aug=False)
                     embedding = F.normalize(embedding, p=2, dim=1)
                 embeddings.append(embedding)
-            avg_embedding = torch.mean(torch.stack(embeddings), dim=0)  # make avg of 3 enrollment file embeddings
-            if model_id not in enrollments:
-                enrollments[model_id] = {}
-            enrollments[model_id][phrase_id] = avg_embedding
+            enrollments[model_id] = torch.mean(torch.stack(embeddings), dim=0)#make avg of 3 enrollment file embeddings
 
+        # with open("enrollments.pkl", "wb") as f:
+        #     pickle.dump(enrollments, f)
+
+        # Ensure the directory exists
         os.makedirs(path_save_model, exist_ok=True)
 
         # Save enrollments using the provided path
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
             pickle.dump(enrollments, f)
 
+#test_network Method ...
     def test_network(self, test_list, test_path, path_save_model):
         print("hello, this in test network ... ECAPAModel2B.py")
         self.eval()
+        # with open("enrollments.pkl", "rb") as f:
+        #     enrollments = pickle.load(f)
+        # Loading enrollments
         enrollments_path = os.path.join(path_save_model, "enrollments.pkl")
         print(f"Loading enrollments from {enrollments_path}")
-        with open(enrollments_path, "rb") as f:
+        with open(os.path.join(path_save_model, "enrollments.pkl"), "rb") as f:
             enrollments = pickle.load(f)
 
         scores, labels = [], []
         lines = open(test_list).read().splitlines()
         lines = lines[1:]  # Skip the header row
-        
         for line in lines:
             parts = line.split()
             model_id = parts[0]
             test_file = parts[1]
             trial_type = parts[2]
-            
+            # Assign labels based on trial-type
+            if trial_type in ['TC', 'TW']:
+                label = 1
+            else:
+                label = 0
+            #label = int(parts[2])
             file_name = os.path.join(test_path, test_file)
             file_name += ".wav"
+            #audio, _ = sf.read(os.path.join(test_path, test_file))
             audio, _ = sf.read(file_name)
             data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
-            
             with torch.no_grad():
-                # Generate speaker embedding
-                speaker_emb = self.speaker_encoder.forward(data, aug=False)
-                speaker_emb = F.normalize(speaker_emb, p=2, dim=1)
-                
-                # Generate phrase logits
-                phrase_logits = self.phoneme_loss(speaker_emb)
-                _, predicted_phrase_label = torch.max(phrase_logits, 1)
-                predicted_phrase_label = predicted_phrase_label.item()
-                
-                # Initialize predicted scores
-                predicted_speaker_score = 0
-                predicted_phrase_score = 0
-                
-                if model_id in enrollments:
-                    enrollment_data = enrollments[model_id]
-                    
-                    if predicted_phrase_label in enrollment_data:
-                        enrollment_embedding = enrollment_data[predicted_phrase_label]
-                        predicted_speaker_score = torch.mean(torch.matmul(speaker_emb, enrollment_embedding.T)).detach().cpu().numpy()
-                        # Simulating the phrase score based on the predicted logits
-                        predicted_phrase_score = torch.mean((predicted_phrase_label == torch.argmax(phrase_logits, dim=1)).float()).item()
-                    else:
-                        predicted_speaker_score = 0  # Handle missing phrase labels appropriately
-                        predicted_phrase_score = 0
-                
-                # Set actual scores based on trial type
-                if trial_type == 'TC':
-                    speaker_score = 1
-                    phrase_score = 1
-                    label = 1
-                elif trial_type == 'TW':
-                    speaker_score = 1
-                    phrase_score = 0
-                    label = 0
-                elif trial_type == 'IC':
-                    speaker_score = 0
-                    phrase_score = 1
-                    label = 0
-                elif trial_type == 'IW':
-                    speaker_score = 0
-                    phrase_score = 0
-                    label = 0
-                else:
-                    raise ValueError(f"Unknown trial type: {trial_type}")
-            
-            # Final score: if both predicted_speaker_score and predicted_phrase_score are correct, then score is 1, otherwise 0
-            if (predicted_speaker_score == speaker_score) and (predicted_phrase_score == phrase_score):
-                score = 1
-            else:
-                score = 0
+                test_embedding = self.speaker_encoder.forward(data, aug=False)
+                test_embedding = F.normalize(test_embedding, p=2, dim=1)
 
+            score = torch.mean(torch.matmul(test_embedding, enrollments[model_id].T)).detach().cpu().numpy()
             scores.append(score)
             labels.append(label)
 
-        # Calculate EER and minDCF for speaker verification
         EER = tuneThresholdfromScore(scores, labels, [1, 0.1])[1]
         fnrs, fprs, thresholds = ComputeErrorRates(scores, labels)
         minDCF, _ = ComputeMinDcf(fnrs, fprs, thresholds, 0.05, 1, 1)
