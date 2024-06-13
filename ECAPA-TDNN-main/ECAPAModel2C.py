@@ -146,7 +146,8 @@ class ECAPAModel(nn.Module):
         for line in lines:
             parts = line.split()
             model_id = parts[0]
-            phrase_id = parts[1]
+            #phrase_id = parts[1]
+            phrase_id = int(parts[1])  # Convert phrase_id to integer
             enroll_files = parts[3:]  # Enrollment file IDs
             embeddings = []
             for file in enroll_files:

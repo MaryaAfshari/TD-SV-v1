@@ -4,6 +4,7 @@
 #Date: 7.6.2024 June
 #Date: 8.6.2024 June/ 19.3.1403 Khordad 
 #Date: 12.6.2024 June/ 23.3.1403 Khordad Chaharshanbe Wednesday
+#Date: 13.6.2024 June/ 24.3.1403 Khordad Panjshanbe
 
 
 import argparse
@@ -13,7 +14,7 @@ import torch
 import warnings
 import time
 from tools2B import *
-from dataLoader2B import train_loader
+from dataLoader2C import train_loader
 from ECAPAModel2C import ECAPAModel
 import numpy as np
 
