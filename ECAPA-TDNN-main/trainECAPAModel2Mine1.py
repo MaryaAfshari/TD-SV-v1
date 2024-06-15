@@ -4,6 +4,10 @@ import os
 import torch
 import warnings
 import time
+import soundfile as sf
+import torch.nn.functional as F
+import zipfile
+import pickle
 from tools import *
 from dataLoader2 import train_loader
 from ECAPAModel2 import ECAPAModel
@@ -37,7 +41,6 @@ parser.add_argument('--path_save_model', type=str, default="../../../../../mnt/d
 parser.add_argument('--C', type=int, default=1024, help='Channel size for the speaker encoder')
 parser.add_argument('--m', type=float, default=0.2, help='Loss margin in AAM softmax')
 parser.add_argument('--s', type=float, default=30, help='Loss scale in AAM softmax')
-#parser.add_argument('--n_class', type=int, default=963, help='Number of speakers')
 parser.add_argument('--n_class', type=int, default=1620, help='Number of speakers')
 
 # Command
@@ -87,11 +90,7 @@ while(1):
     # Enrollment and Testing every [test_step] epochs
     if epoch % args.test_step == 0:
         s.save_parameters(args.save_path + "/model_%04d.model" % epoch)
-        #s.enroll_network(enroll_list=args.enroll_list, enroll_path=args.enroll_path)
-        # Call to enroll_network
         s.enroll_network(enroll_list=args.enroll_list, enroll_path=args.enroll_path, path_save_model=args.path_save_model)
-        #EER, minDCF = s.test_network(test_list=args.eval_list, test_path=args.eval_path)
-        # Call to test_network
         EER, minDCF = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model)
         EERs.append(EER)
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, acc, EERs[-1], min(EERs)))
@@ -99,6 +98,55 @@ while(1):
         score_file.flush()
 
     if epoch >= args.max_epoch:
+        # Generate submission file after the final epoch
+        generate_submission_file(s, args.eval_list, args.eval_path, args.path_save_model)
         break
 
     epoch += 1
+
+score_file.close()
+
+def generate_submission_file(model, eval_list, eval_path, enrollments_path):
+    trials = load_trials(eval_list)
+    enrollments = load_enrollments(enrollments_path)
+    scores = compute_scores(model, enrollments, trials, eval_path)
+    answer_file_path = os.path.join(enrollments_path, 'answer.txt')
+    write_scores_to_file(scores, file_path=answer_file_path)
+    create_submission_zip(output_zip=os.path.join(enrollments_path, 'submission.zip'), answer_file=answer_file_path)
+
+def load_trials(trials_file):
+    with open(trials_file, 'r') as file:
+        lines = file.readlines()
+    trials = [line.strip().split() for line in lines[1:]]
+    return trials
+
+def load_enrollments(enrollments_path):
+    with open(os.path.join(enrollments_path, "enrollments.pkl"), 'rb') as f:
+        enrollments = pickle.load(f)
+    return enrollments
+
+def compute_scores(model, enrollments, trials, eval_path):
+    scores = []
+    for trial in trials:
+        model_id, test_file, trial_type = trial
+        file_path = os.path.join(eval_path, f"{test_file}.wav")
+        audio, _ = sf.read(file_path)
+        data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
+        
+        with torch.no_grad():
+            test_embedding = model.speaker_encoder.forward(data, aug=False)
+            test_embedding = F.normalize(test_embedding, p=2, dim=1)
+        
+        score = torch.mean(torch.matmul(test_embedding, enrollments[model_id].T)).cpu().numpy()
+        scores.append(score)
+    
+    return scores
+
+def write_scores_to_file(scores, file_path='answer.txt'):
+    with open(file_path, 'w') as file:
+        for score in scores:
+            file.write(f"{score}\n")
+
+def create_submission_zip(output_zip='submission.zip', answer_file='answer.txt'):
+    with zipfile.ZipFile(output_zip, 'w') as zipf:
+        zipf.write(answer_file, os.path.basename(answer_file))
