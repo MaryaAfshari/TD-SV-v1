@@ -96,7 +96,7 @@ while(1):
         #EER, minDCF, scores = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model,  compute_eer=False)
         
         # Test with development trials (with trial_type)
-        dev_EER, dev_minDCF, dev_scores = s.test_network(test_list=args.eval_list, test_path=args.train_path, path_save_model=args.path_save_model,  compute_eer=True)
+        dev_EER, dev_minDCF, dev_scores = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model,  compute_eer=True)
         
         EERs.append(dev_EER)
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, acc, EERs[-1], min(EERs)))
