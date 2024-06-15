@@ -197,9 +197,20 @@ class ECAPAModel(nn.Module):
                 # Generate speaker embedding
                 speaker_emb = self.speaker_encoder.forward(data, aug=False)
                 speaker_emb = F.normalize(speaker_emb, p=2, dim=1)
-                
+
+                # Check if speaker_emb is None
+                if speaker_emb is None:
+                    print(f"Error: speaker_emb is None for {file_name}")
+                    continue
+
                 # Generate phrase logits
                 phrase_logits = self.phoneme_loss(speaker_emb)
+
+                # Check if phrase_logits is None
+                if phrase_logits is None:
+                    print(f"Error: phrase_logits is None for {file_name}")
+                    continue
+
                 _, predicted_phrase_label = torch.max(phrase_logits, 1)
                 predicted_phrase_label = predicted_phrase_label.item()
                 
