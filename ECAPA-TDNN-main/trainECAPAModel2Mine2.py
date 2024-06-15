@@ -25,7 +25,7 @@ parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
 parser.add_argument("--lr_decay", type=float, default=0.97, help='Learning rate decay every [test_step] epochs')
 
 # Paths
-parser.add_argument('--train_list', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/docs/train_labels.txt", help='The path of the training list')
+parser.add_argument('--train_list', type=str, default="/mnt/disk1/data/TdSVC2024/task1/docs/train_labels.txt", help='The path of the training list')
 parser.add_argument('--train_path', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/wav/train", help='The path of the training data')
 parser.add_argument('--eval_list', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/docs/dev_trials.txt", help='The path of the evaluation list')
 parser.add_argument('--eval_path', type=str, default="../../../../../mnt/disk1/data/TdSVC2024/task1/wav/evaluation", help='The path of the evaluation data')
@@ -35,7 +35,7 @@ parser.add_argument('--musan_path', type=str, default="/data08/Others/musan_spli
 parser.add_argument('--rir_path', type=str, default="/data08/Others/RIRS_NOISES/simulated_rirs", help='The path to the RIR set')
 parser.add_argument('--save_path', type=str, default="../../../../../mnt/disk1/users/afshari/MyEcapaModel", help='Path to save the score.txt and models')
 parser.add_argument('--initial_model', type=str, default="", help='Path of the initial_model')
-parser.add_argument('--path_save_model', type=str, default="../../../../../mnt/disk1/users/afshari/MyEnrollment", help='Path to save the enrollment and models')
+parser.add_argument('--path_save_model', type=str, default="/mnt/disk1/users/afshari/MyEnrollment", help='Path to save the enrollment and models')
 
 # Model and Loss settings
 parser.add_argument('--C', type=int, default=1024, help='Channel size for the speaker encoder')
@@ -93,10 +93,10 @@ while(1):
         s.enroll_network(enroll_list=args.enroll_list, enroll_path=args.enroll_path, path_save_model=args.path_save_model)
         
         # Test with evaluation trials (without trial_type)
-        EER, minDCF, scores = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model, save_path=args.path_save_model, compute_eer=False)
+        #EER, minDCF, scores = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model,  compute_eer=False)
         
         # Test with development trials (with trial_type)
-        dev_EER, dev_minDCF, dev_scores = s.test_network(test_list=args.train_list, test_path=args.train_path, path_save_model=args.path_save_model, save_path=args.path_save_model, compute_eer=True)
+        dev_EER, dev_minDCF, dev_scores = s.test_network(test_list=args.eval_list, test_path=args.train_path, path_save_model=args.path_save_model,  compute_eer=True)
         
         EERs.append(dev_EER)
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, ACC %2.2f%%, EER %2.2f%%, bestEER %2.2f%%" % (epoch, acc, EERs[-1], min(EERs)))

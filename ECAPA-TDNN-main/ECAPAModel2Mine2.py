@@ -77,7 +77,7 @@ class ECAPAModel(nn.Module):
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
             pickle.dump(enrollments, f)
 
-    def test_network(self, test_list, test_path, path_save_model, save_path, compute_eer=True):
+    def test_network(self, test_list, test_path, path_save_model, compute_eer=True):
         self.eval()
         enrollments_path = os.path.join(path_save_model, "enrollments.pkl")
         print(f"Loading enrollments from {enrollments_path}")
@@ -123,13 +123,13 @@ class ECAPAModel(nn.Module):
             minDCF = None
 
         # Write scores to answer.txt in the specified save_path
-        answer_file_path = os.path.join(save_path, "answer.txt")
+        answer_file_path = os.path.join(path_save_model, "answer.txt")
         with open(answer_file_path, 'a') as f:  # Append to the file
             for score in scores:
                 f.write(f"{score}\n")
 
         # Zip the answer.txt file
-        submission_zip_path = os.path.join(save_path, "submission.zip")
+        submission_zip_path = os.path.join(path_save_model, "submission.zip")
         with zipfile.ZipFile(submission_zip_path, 'w') as zipf:
             zipf.write(answer_file_path, os.path.basename(answer_file_path))
 
