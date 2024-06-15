@@ -158,6 +158,54 @@ class ECAPAModel(nn.Module):
         with open(os.path.join(path_save_model, "enrollments.pkl"), "wb") as f:
             pickle.dump(enrollments, f)
 
+def compute_llr_score(test_embedding, enrollment_embedding):
+    # Assuming test_embedding and enrollment_embedding are feature vectors (embeddings)
+    # Example: Using cosine similarity as the log-likelihood ratio (simplified example)
+    score = np.dot(test_embedding, enrollment_embedding.T)
+    return score
+
+def test_network3(self, test_list, test_path, path_save_model):
+    self.eval()
+    enrollments_path = os.path.join(path_save_model, "enrollments.pkl")
+    print(f"Loading enrollments from {enrollments_path}")
+    with open(enrollments_path, "rb") as f:
+        enrollments = pickle.load(f)
+
+    scores = []
+    lines = open(test_list).read().splitlines()
+    lines = lines[1:]  # Skip the header row
+    for line in lines:
+        parts = line.split()
+        model_id = parts[0]
+        test_file = parts[1]
+        file_name = os.path.join(test_path, f"{test_file}.wav")
+        audio, _ = sf.read(file_name)
+        data = torch.FloatTensor(np.stack([audio], axis=0)).cuda()
+        
+        with torch.no_grad():
+            test_embedding = self.speaker_encoder.forward(data, aug=False)
+            test_embedding = F.normalize(test_embedding, p=2, dim=1)
+        
+        enrollment_embedding = enrollments[model_id].cpu().numpy()
+        test_embedding = test_embedding.cpu().numpy()
+        llr_score = compute_llr_score(test_embedding, enrollment_embedding)
+        scores.append(llr_score)
+    
+    # Write scores to answer.txt in the specified save_path
+    answer_file_path = os.path.join(path_save_model, "answer.txt")
+    with open(answer_file_path, 'w') as f:
+        for score in scores:
+            f.write(f"{score}\n")
+
+    # Zip the answer.txt file
+    submission_zip_path = os.path.join(path_save_model, "submission.zip")
+    with zipfile.ZipFile(submission_zip_path, 'w') as zipf:
+        zipf.write(answer_file_path, os.path.basename(answer_file_path))
+
+    return scores
+
+
+
 #test_network Method ...
     def test_network(self, test_list, test_path, path_save_model):
         print("hello, this in test network ... ECAPAModel2.py")
