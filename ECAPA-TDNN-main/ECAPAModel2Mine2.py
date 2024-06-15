@@ -112,7 +112,11 @@ class ECAPAModel(nn.Module):
             scores.append(score)
             if label is not None:
                 labels.append(label)
-
+            sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
+                             " Testing: %.2f%%, " % (100 * (num / len(lines))) + \
+                             " Score: %.5f \r" % (score))
+            sys.stderr.flush()
+        sys.stdout.write("\n")
         # Compute EER and minDCF only if labels are available and compute_eer is True
         if compute_eer and labels:
             EER = tuneThresholdfromScore(scores, labels, [1, 0.1])[1]
