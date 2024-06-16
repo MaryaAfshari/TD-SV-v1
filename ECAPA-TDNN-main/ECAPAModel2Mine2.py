@@ -112,7 +112,10 @@ class ECAPAModel(nn.Module):
             scores.append(score)
             if label is not None:
                 labels.append(label)
-                
+            
+            # Print the score for each test file
+            print(f"Score for model_id {model_id} and test_file {test_file}: {score}")
+
         # Compute EER and minDCF only if labels are available and compute_eer is True
         if compute_eer and labels:
             EER = tuneThresholdfromScore(scores, labels, [1, 0.1])[1]
