@@ -97,7 +97,7 @@ while(1):
         
         # Test with development trials (with trial_type)
         dev_EER, dev_minDCF, dev_scores = s.test_network(test_list=args.eval_list, test_path=args.eval_path, path_save_model=args.path_save_model,  compute_eer=True)
-        
+        print("Hello I am here .... after test network ...")
         EERs.append(dev_EER)
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, EER %2.2f%%, bestEER %2.2f%%" % (epoch, EERs[-1], min(EERs)))
         score_file.write("%d epoch, LR %f, LOSS %f, EER %2.2f%%, bestEER %2.2f%%\n" % (epoch, lr, loss, EERs[-1], min(EERs)))
