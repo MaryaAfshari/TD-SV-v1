@@ -130,13 +130,13 @@ class ECAPAModel(nn.Module):
             minDCF = None
 
         # Write scores to answer.txt in the specified save_path
-        answer_file_path = os.path.join(path_save_model, "answer.txt")
-        with open(answer_file_path, 'a') as f:  # Append to the file
+        answer_file_path = os.path.join(path_save_model, "answer_dev.txt")
+        with open(answer_file_path, 'w') as f:  # Append to the file
             for score in scores:
                 f.write(f"{score}\n")
 
         # Zip the answer.txt file
-        submission_zip_path = os.path.join(path_save_model, "submission.zip")
+        submission_zip_path = os.path.join(path_save_model, "submission_dev.zip")
         with zipfile.ZipFile(submission_zip_path, 'w') as zipf:
             zipf.write(answer_file_path, os.path.basename(answer_file_path))
 
