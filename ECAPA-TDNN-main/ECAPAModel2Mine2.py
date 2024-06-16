@@ -87,6 +87,7 @@ class ECAPAModel(nn.Module):
         scores, labels = [], []
         lines = open(test_list).read().splitlines()
         lines = lines[1:]  # Skip the header row
+        counter = 0  # Initialize the counter
         for line in lines:
             parts = line.split()
             model_id = parts[0]
@@ -113,8 +114,11 @@ class ECAPAModel(nn.Module):
             if label is not None:
                 labels.append(label)
             
-            # Print the score for each test file
-            print(f"Score for model_id {model_id} and test_file {test_file}: {score}")
+            counter += 1  # Increment the counter
+            if counter % 10000 == 0:
+                print(f"Processed {counter} lines")
+                # Print the score for each 10000 test file
+                print(f"Score for model_id {model_id} and test_file {test_file}: {score}")
 
         # Compute EER and minDCF only if labels are available and compute_eer is True
         if compute_eer and labels:
