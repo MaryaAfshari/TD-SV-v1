@@ -54,6 +54,7 @@ class ECAPAModel(nn.Module):
 
     def enroll_network(self, enroll_list, enroll_path, path_save_model):
         self.eval()
+        print("I am in enroll method ....")
         enrollments = {}
         lines = open(enroll_list).read().splitlines()
         lines = lines[1:]  # Skip the header row
@@ -115,7 +116,7 @@ class ECAPAModel(nn.Module):
                 labels.append(label)
             
             counter += 1  # Increment the counter
-            if counter % 10000 == 0:
+            if counter % 500000 == 0:
                 print(f"Processed {counter} lines")
                 # Print the score for each 10000 test file
                 print(f"Score for model_id {model_id} and test_file {test_file}: {score}")
@@ -130,13 +131,13 @@ class ECAPAModel(nn.Module):
             minDCF = None
 
         # Write scores to answer.txt in the specified save_path
-        answer_file_path = os.path.join(path_save_model, "answer_dev.txt")
+        answer_file_path = os.path.join(path_save_model, "answer.txt")
         with open(answer_file_path, 'w') as f:  # Append to the file
             for score in scores:
                 f.write(f"{score}\n")
 
         # Zip the answer.txt file
-        submission_zip_path = os.path.join(path_save_model, "submission_dev.zip")
+        submission_zip_path = os.path.join(path_save_model, "submission.zip")
         with zipfile.ZipFile(submission_zip_path, 'w') as zipf:
             zipf.write(answer_file_path, os.path.basename(answer_file_path))
 
